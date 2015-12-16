@@ -4,3 +4,5 @@
             [clojure.string :as str]))
 
 (def prob (str/trim (slurp (io/resource "prob2"))))
+
+;; work space
