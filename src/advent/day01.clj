@@ -4,12 +4,12 @@
 
 (def prob (str/trim (slurp (io/resource "prob1"))))
 
-(def part1
+(defn part1 []
   (->>  prob
         (map #(if (= % \() 1 -1))
         (reduce +)))
 
-(def part2
+(defn part2 []
   (->>  prob
         (map-indexed #(vec [%1 (if (= %2 \() 1 -1)]))
         (reduce (fn [acc [idx step]]

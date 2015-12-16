@@ -15,5 +15,5 @@
                           cat)
                     (range))))
 
-(def part1 (part-n prob #"^0{5}.*"))
-(def part2 (part-n prob #"^0{6}.*"))
+(defn part1 [] (part-n prob #"^0{5}.*"))
+(defn part2 [] (part-n prob #"^0{6}.*"))

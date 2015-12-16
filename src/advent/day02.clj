@@ -5,7 +5,7 @@
 
 (def prob (str/trim (slurp (io/resource "prob2"))))
 
-(def part1
+(defn part1 []
   (->>  prob
         (str/split-lines)
         (map (fn [line]
@@ -17,7 +17,7 @@
                     (reduce + (apply min xyz))))))
         (reduce +)))
 
-(def part2
+(defn part2 []
   (->>  prob
         (str/split-lines)
         (map (fn [line]

@@ -30,5 +30,5 @@
     (filter #(> % 0))
     (count)))
 
-(def part1 (part-fn {:cords [[0 0]      ] :houses {[0 0] 1}}))
-(def part2 (part-fn {:cords [[0 0] [0 0]] :houses {[0 0] 1}}))
+(defn part1 [] (part-fn {:cords [[0 0]      ] :houses {[0 0] 1}}))
+(defn part2 [] (part-fn {:cords [[0 0] [0 0]] :houses {[0 0] 1}}))
