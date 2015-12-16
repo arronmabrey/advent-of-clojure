@@ -3,4 +3,4 @@
             [clojure.java.io :as io]
             [clojure.string :as str]))
 
-(def prob (str/trim (slurp (io/resource "prob1"))))
+(def prob (str/trim (slurp (io/resource "prob2"))))
