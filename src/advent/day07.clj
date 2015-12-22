@@ -1,55 +1,42 @@
 (ns advent.day07
   (:require [clojure.tools.namespace.repl :refer [refresh]]
             [clojure.java.io :as io]
-            [clojure.string :as str]
-            [digest :refer [md5]]))
+            [clojure.walk :as w]))
 
-(def prob (str/trim (slurp (io/resource "prob7"))))
+(def prob (->> "prob7" (io/resource) (io/reader) line-seq))
 
-;; work space
+(def opfn {'OR 'bit-or 'AND 'bit-and 'NOT 'bit-not 'LSHIFT 'bit-shift-left 'RSHIFT 'bit-shift-right})
 
-(defn parse-token [token]
-  (cond
-    (re-matches #"\d+" token) (read-string token)
-    (re-matches #"[a-z]+" token) (keyword token)
-    (re-matches #"->" token) (symbol token)
-    (re-matches #"[A-Z]+" token) (str token)))
+(defn infix->prefix
+  ([b _ a] [a b])
+  ([c b _ a] [a (list (opfn c) b)])
+  ([d c b _ a] [a (list (opfn c) d b)]))
 
-(def op-map {"NOT" bit-not
-             "AND" bit-and
-             "OR"  bit-or
-             "LSHIFT" bit-shift-left
-             "RSHIFT" bit-shift-right})
+(def parse-line
+  (comp (partial apply infix->prefix) read-string #(str \[ % \])))
 
-(def dispatch-table
-  (->> prob
-       (str/split-lines)
-       (map str/trim)
-       (map #(str/split % #"\s"))
-       (map (partial map parse-token))
-       (map (partial reduce (fn [acc, token]
-                              (cond
-                                (number? token) (conj acc token)
-                                (keyword? token) (conj acc token)
-                                (string? token) (vec (cons token acc))
-                                (symbol? token) (conj [token] acc))) []))
-       (reduce (fn [acc [_ v k]] (conj acc [k v]))
-               {})))
+(def bindings
+  (into {} (map parse-line) prob))
 
-(defn solve
-  ([state dt k]
-   (let [fallback [k]
-         next-op (get dt k fallback)
-         fnext-op (first next-op)]
-     (cond
-       (number? fnext-op) fnext-op
-       (keyword? fnext-op) (or (get @state fnext-op)
-                               (get (swap! state assoc fnext-op (solve state dt fnext-op)) fnext-op))
-       (string? fnext-op) (or (get @state k)
-                              (get (swap! state assoc k (apply solve state dt k next-op)) k))
-       :else (throw (Exception. "unknown fnext-op " fnext-op)))))
-  ([state dt k op & args]
-   (apply (op-map op) (map (partial solve state dt) args))))
+(declare solve)
 
-(defn part1 [] (solve (atom {}) dispatch-table :a))
-(defn part2 [] (solve (atom {}) (assoc dispatch-table :b [(part1)]) :a))
+(defn walker [cache binds]
+  (fn [expr]
+    (or (@cache expr)
+        (if-let [bound-expr (binds expr)]
+          (let [deps (filter binds (flatten (conj [] bound-expr)))]
+            (if (every? @cache deps)
+              (->> deps
+                   (map (fn [dep] [dep (@cache dep)]))
+                   (into {})
+                   (solve bound-expr)
+                   (swap! cache assoc expr)
+                   (expr))
+              bound-expr))
+          expr))))
+
+(defn solve [form binds]
+  (eval (w/prewalk (walker (atom {}) binds) form)))
+
+(defn part1 [] (solve (bindings 'a) bindings))
+(defn part2 [] (solve (bindings 'a) (assoc bindings 'b (part1))))

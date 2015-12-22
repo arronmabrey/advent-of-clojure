@@ -1,9 +1,6 @@
 (ns advent.core
   (:require [clojure.tools.namespace.repl :refer [refresh]]
             [clojure.java.io :as io]
-            [clojure.string :as str]
-            [digest :refer [md5]]))
+            [clojure.walk :as w]))
 
-(def prob (str/trim (slurp (io/resource "prob7"))))
-
-;; work space
+(def prob (->> "prob7" (io/resource) (io/reader) line-seq))
