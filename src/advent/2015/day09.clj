@@ -1,4 +1,4 @@
-(ns advent.day09
+(ns advent.2015.day09
   (:require [clojure.tools.namespace.repl :refer [refresh]]
             [clojure.java.io :as io]
             [clojure.string :as str]

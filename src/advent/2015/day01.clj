@@ -1,4 +1,4 @@
-(ns advent.day01
+(ns advent.2015.day01
   (:require [clojure.java.io :as io]
             [clojure.string :as str]))
 
@@ -14,6 +14,6 @@
         (map-indexed #(vec [%1 (if (= %2 \() 1 -1)]))
         (reduce (fn [acc [idx step]]
                   (if (= (+ acc step) -1)
-                      (reduced (inc idx))
-                      (+ acc step)))
+                    (reduced (inc idx))
+                    (+ acc step)))
                 0)))
