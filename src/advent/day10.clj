@@ -4,8 +4,8 @@
             [clojure.string :as str]
             [clojure.set :as set]))
 
-(def prob (->> "prob10" (io/resource) (io/reader) line-seq))
-(def samp (->> "samp10" (io/resource) (io/reader) line-seq))
+(def prob (->> "2015/prob10" (io/resource) (io/reader) line-seq))
+(def samp (->> "2015/samp10" (io/resource) (io/reader) line-seq))
 
 (defn pp [x] (clojure.pprint/pprint x) x)
 

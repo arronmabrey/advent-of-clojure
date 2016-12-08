@@ -4,7 +4,7 @@
             [clojure.string :as str]
             [digest :refer [md5]]))
 
-(def prob (str/trim (slurp (io/resource "prob6"))))
+(def prob (str/trim (slurp (io/resource "2015/prob6"))))
 
 ;; work space
 

@@ -4,7 +4,7 @@
             [clojure.string :as str]
             [clojure.set :as set]))
 
-(def prob (->> "prob9" (io/resource) (io/reader) line-seq))
+(def prob (->> "2015/prob9" (io/resource) (io/reader) line-seq))
 
 (defn parse-line [line]
   (-> line

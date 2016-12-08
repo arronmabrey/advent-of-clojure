@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.string :as str]))
 
-(def prob (->> "prob8" (io/resource) (io/reader) line-seq))
+(def prob (->> "2015/prob8" (io/resource) (io/reader) line-seq))
 
 (defn unescape-count [line]
   (->> line

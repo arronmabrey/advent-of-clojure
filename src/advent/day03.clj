@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.string :as str]))
 
-(def prob (str/trim (slurp (io/resource "prob3"))))
+(def prob (str/trim (slurp (io/resource "2015/prob3"))))
 
 (defn char->move [char]
   (case char

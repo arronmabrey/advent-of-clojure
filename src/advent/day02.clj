@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.string :as str]))
 
-(def prob (str/trim (slurp (io/resource "prob2"))))
+(def prob (str/trim (slurp (io/resource "2015/prob2"))))
 
 (defn part1 []
   (->>  prob

@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.walk :as w]))
 
-(def prob (->> "prob7" (io/resource) (io/reader) line-seq))
+(def prob (->> "2015/prob7" (io/resource) (io/reader) line-seq))
 
 (def opfn {'OR 'bit-or 'AND 'bit-and 'NOT 'bit-not 'LSHIFT 'bit-shift-left 'RSHIFT 'bit-shift-right})
 
