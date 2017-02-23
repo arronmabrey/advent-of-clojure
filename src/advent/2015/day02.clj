@@ -3,29 +3,36 @@
             [clojure.java.io :as io]
             [clojure.string :as str]))
 
-(def prob (str/trim (slurp (io/resource "2015/prob2"))))
+(def prob (->> "2015/prob2" io/resource io/reader line-seq))
 
-(defn part1 []
-  (->>  prob
-        (str/split-lines)
-        (map (fn [line]
-              (map read-string (str/split line #"x"))))
-        (map (fn [[l w h]]
-              (let [xyz (map (partial apply *) [[l w] [w h] [h l]])]
-               (->> xyz
-                    (map (partial * 2))
-                    (reduce + (apply min xyz))))))
-        (reduce +)))
+(defn parse-dims [line]
+  (map read-string (str/split line #"x")))
 
-(defn part2 []
-  (->>  prob
-        (str/split-lines)
-        (map (fn [line]
-              (map read-string (str/split line #"x"))))
-        (map (fn [lwh]
-              (->>  lwh
-                    (sort)
-                    (take 2)
-                    (map (partial * 2))
-                    (reduce + (reduce * lwh)))))
-        (reduce +)))
+(defn dim->faces [[length width height]] [[length width] [width height] [height length]])
+
+(def product (partial reduce *))
+(def squared (partial map #(* 2 %)))
+(def smallest-face (comp (partial take 2) sort))
+(def face-areas (comp (partial map product) dim->faces))
+
+(defn sum
+  ([xs] (reduce + xs))
+  ([initial xs] (reduce + initial xs)))
+
+;; part-1
+;; 1598415
+(->>  prob
+      (map parse-dims)
+      (map #(sum (product (smallest-face %))
+                 (squared (face-areas %))))
+      sum)
+
+;; part-2
+;; 3812909
+(->>  prob
+      (map parse-dims)
+      (map #(sum (product %)
+                 (squared (smallest-face %))))
+      sum)
+
+;;
