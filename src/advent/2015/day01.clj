@@ -9,11 +9,11 @@
        (map {\( 1 \) -1})
        (reductions +)))
 
-;; part-1
+;; part-1 => 232
 (->> part-n
      last)
 
-;; part-2
+;; part-2 => 1783
 (->> part-n
      (take-while #(not= -1 %))
      count
