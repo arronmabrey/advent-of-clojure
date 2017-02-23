@@ -19,20 +19,20 @@
   ([xs] (reduce + xs))
   ([initial xs] (reduce + initial xs)))
 
+
 ;; part-1
-;; 1598415
 (->>  prob
       (map parse-dims)
       (map #(sum (product (smallest-face %))
                  (squared (face-areas %))))
       sum)
+;; => 1598415
+
 
 ;; part-2
-;; 3812909
 (->>  prob
       (map parse-dims)
       (map #(sum (product %)
                  (squared (smallest-face %))))
       sum)
-
-;;
+;; => 3812909
