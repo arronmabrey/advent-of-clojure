@@ -2,19 +2,19 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as str]))
 
-(def prob (-> "2015/prob1" io/resource slurp str/trim))
+(def prob (->> "2015/prob1" io/resource slurp str/trim))
 
-(def lookup {\( 1 \) -1})
+(def part-n
+  (->> prob
+       (map {\( 1 \) -1})
+       (reductions +)))
 
-(defn part1 []
-  (->>  prob
-        (map lookup)
-        (reduce +)))
+;; part-1
+(->> part-n
+     last)
 
-(defn part2 []
-  (->>  prob
-        (map lookup)
-        (reductions +)
-        (take-while #(not= -1 %))
-        count
-        inc))
+;; part-2
+(->> part-n
+     (take-while #(not= -1 %))
+     count
+     inc)
