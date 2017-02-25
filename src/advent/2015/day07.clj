@@ -1,42 +1,41 @@
 (ns advent.2015.day07
-  (:require [clojure.tools.namespace.repl :refer [refresh]]
-            [clojure.java.io :as io]
-            [clojure.walk :as w]))
+  (:require [clojure.java.io :as io]
+            [clojure.walk :refer [prewalk]]))
 
-(def prob (->> "2015/prob7" (io/resource) (io/reader) line-seq))
-
+(def prob (->> "2015/prob7" io/resource io/reader line-seq))
 (def opfn {'OR 'bit-or 'AND 'bit-and 'NOT 'bit-not 'LSHIFT 'bit-shift-left 'RSHIFT 'bit-shift-right})
 
 (defn infix->prefix
+  ([xs] (apply infix->prefix xs))
   ([b _ a] [a b])
   ([c b _ a] [a (list (opfn c) b)])
   ([d c b _ a] [a (list (opfn c) d b)]))
 
-(def parse-line
-  (comp (partial apply infix->prefix) read-string #(str \[ % \])))
-
-(def bindings
-  (into {} (map parse-line) prob))
+(def parse-line (comp infix->prefix read-string #(str \[ % \])))
+(def bindings (into {} (map parse-line) prob))
 
 (declare solve)
+(defn walker [cache binding-ctx]
+  (fn [sym]
+    (or (@cache sym)
+        (if-let [expression (binding-ctx sym)]
+          (let [expression-deps (filter binding-ctx (flatten (conj [] expression)))]
+            (if (every? @cache expression-deps)
+              (->> expression-deps
+                   (select-keys @cache)
+                   (solve cache expression)
+                   (swap! cache assoc sym)
+                   sym)
+              expression))
+          sym))))
 
-(defn walker [cache binds]
-  (fn [expr]
-    (or (@cache expr)
-        (if-let [bound-expr (binds expr)]
-          (let [deps (filter binds (flatten (conj [] bound-expr)))]
-            (if (every? @cache deps)
-              (->> deps
-                   (map (fn [dep] [dep (@cache dep)]))
-                   (into {})
-                   (solve bound-expr)
-                   (swap! cache assoc expr)
-                   (expr))
-              bound-expr))
-          expr))))
+(defn solve [cache sym binding-ctx] (eval (prewalk (walker cache binding-ctx) sym)))
 
-(defn solve [form binds]
-  (eval (w/prewalk (walker (atom {}) binds) form)))
+(defn part-1 [] (solve (atom {}) (bindings 'a) bindings)) ;; => 956
+(defn part-2 [] (solve (atom {}) (bindings 'a) (assoc bindings 'b (part-1)))) ;; => 40149
 
-(defn part1 [] (solve (bindings 'a) bindings))
-(defn part2 [] (solve (bindings 'a) (assoc bindings 'b (part1))))
+[(part-1) (part-2)]
+
+
+
+;;
