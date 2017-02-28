@@ -1,12 +1,12 @@
 (ns advent.2015.day02
   (:require [clojure.tools.namespace.repl :refer [refresh]]
             [clojure.java.io :as io]
-            [clojure.string :as str]))
+            [clojure.string :refer [split]]))
 
 (def prob (->> "2015/prob2" io/resource io/reader line-seq))
 
 (defn parse-dims [line]
-  (map read-string (str/split line #"x")))
+  (map read-string (split line #"x")))
 
 (defn dim->faces [[length width height]] [[length width] [width height] [height length]])
 
