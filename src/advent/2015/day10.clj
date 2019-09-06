@@ -1,13 +1,17 @@
 (ns advent.2015.day10
-  (:require [clojure.tools.namespace.repl :refer [refresh]]
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.set :as set]))
 
-(def prob (->> "2015/prob10" (io/resource) (io/reader) line-seq))
-(def samp (->> "2015/samp10" (io/resource) (io/reader) line-seq))
+(def prob (->> "2015/prob10"
+               (io/resource)
+               (io/reader)
+               line-seq))
 
-(defn pp [x] (clojure.pprint/pprint x) x)
+(def samp (->> "2015/samp10"
+               (io/resource)
+               (io/reader)
+               line-seq))
 
 (defn look-and-say [input]
   (->> input
